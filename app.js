@@ -21,7 +21,15 @@ app.get("/", (req, res) => {
 //endpoint with all of the data from the vehicles table
 app.get("/vehicles", async (req, res) => {
   let data = await Vehicle.findAll();
-  res.send(data);
+  let finalData = [];
+  data.forEach((vehicle) => {
+    let tempVehicle = vehicle.toJSON();
+    tempVehicle["makeModel"] = vehicle.make + "-" + vehicle.model;
+    delete tempVehicle.createdAt;
+    delete tempVehicle.updatedAt;
+    finalData.push(tempVehicle);
+  });
+  res.send(finalData);
 });
 
 app.listen(port, () => {
